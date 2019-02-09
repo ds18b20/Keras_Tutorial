@@ -1,3 +1,6 @@
+# weight file
+*.h5
+
 # xml
 *.xml
 *.iml

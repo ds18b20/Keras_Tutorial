@@ -2,9 +2,7 @@
 # -*- coding: UTF-8 -*-
 
 """
-Train a Fully-Connected Neural Network(MLP) regression on sample data
-MLP: Multi-Layer Perceptron
-Use mse(mean squared error) loss
+test some functions of model
 """
 
 import numpy as np
@@ -12,13 +10,21 @@ from keras.models import Sequential
 from keras.layers import Dense
 
 model = Sequential()
-model.add(Dense(64, activation='relu', input_dim=3))
+model.add(Dense(64, activation='relu',input_dim=3))
 model.add(Dense(8, activation='relu'))
 model.add(Dense(1, activation='sigmoid'))
 model.compile(optimizer='rmsprop',
               loss='mse')
 # show Net structure & params
 model.summary()
+conf = model.get_config()  # conf is a dict
+print(conf)
+
+# show weights and bias shape
+for layer in model.layers:  # layer is a list
+    weights = layer.get_weights()  # weights(W & b) of each layer are stored in a list
+    for weight in weights:
+        print(weight.shape)
 
 # prepare data
 data_x = np.random.normal(0.0, 1.0, (10000, 3))
@@ -32,12 +38,6 @@ train_data_y = data_y[0:9000]
 test_data_x = data_x[9000:]
 test_data_y = data_y[9000:]
 
-# show weights and bias shape
-for layer in model.layers:
-    weights = layer.get_weights()  # weights(W & b) of each layer are stored in a list
-    for weight in weights:
-        print(weight.shape)
-
 # train model automatically
 # model.fit(train_data_x, train_data_y, batch_size=10, epochs=3)
 # train model by steps
@@ -49,3 +49,6 @@ for step in range(100):
 # evaluate NN
 cost_eval = model.evaluate(test_data_x, test_data_y, batch_size=10)
 print("cost_eval:", cost_eval)
+
+# save weights
+model.save_weights("test_weights.h5")
